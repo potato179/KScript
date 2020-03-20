@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "shortcut icon" href = "./ksIcon.png" type="image/x-icon">
+    <title>한글스크립트 - 한글로 코딩하자!</title>
+    <link rel="stylesheet" href="./kscript.css">
+</head>
+<body>
+    <!--재목-->
+    <div>
+        <p class = "title">한글스크립트</p>
+        <p class = "description">한글로 하는 코딩!</p>
+    </div>
+
+    <!--편집기-->
+    <div>
+        <textarea class = "editor" id = "editor" placeholder = "여기에 코드를 입력하세요!"></textarea><br />
+        <button type = "button" onclick = "kscript()" class="submit"><span>실행</span></button><button type="button" class="reset" onclick="example(5)">초기화</button>
+        <script type = "text/javascript">
+            function kscript() {
+                let koreanScript = document.getElementById("editor").value.split('\n')
+                let buf = {
+                    'koreanScript': koreanScript
+                }
+                console.log('실행됨!')
+                console.log(koreanScript)
+                let source = Array
+                for (let i = 0; i < koreanScript.length;) {
+                    buf.i = i
+                    source = koreanScript[i].split(' ')
+                    buf.source = source
+                    if (!koreanScript[i]) {
+                        i++
+                    } else {
+                        if (!buf[source[0]]) {
+                            if (source[0] === '출력' || source[0] === 'ㅊ') {
+                                if (!source.slice(1).join(' ')) {
+                                    document.write('<br />')
+                                } else if (koreanScript[i].includes('변수,')) {
+                                    document.write(buf[source[2]] + '<br />')
+                                } else {
+                                    document.write(source.slice(1).join(' ') + '<br />')
+                                }
+                                i++
+                            } else if (source[0] === '주석' || source[0] === 'ㅈ') {
+                                i++
+                            } else if (source[0] === '종료' || source[0] === 'ㅃ') {
+                                i = (koreanScript.length)
+                                document.write('<br />성공적으로 실행되었습니다! 한글스크립트 1.0<br /><a href = "./koreanscript.html">종료</a>')
+                            } else if(source[0] === '건너뛰기' || source[0] === 'ㄸ') {
+                                let jump = Number(source[1])
+                                if(!jump) {
+                                document.write('[한글스크립트 오류] 잘못된 건너뛰기' + (i + 1) + '번째 줄: 건너뛸 수가 제대로 되지 않았습니다.\n')
+                                i++
+                                } else {
+                                    if(!Number(jump)) {
+                                        if (!buf[jump]) {
+                                            document.write('[한글스크립트 오류] 잘못된 건너뛰기' + (i + 1) + '번째 줄: 건너뛸 수가 제대로 되지 않았습니다.\n')
+                                        } else {
+                                            if (!Number(buf[jump])) {
+                                                document.write('[한글스크립트 오류] 잘못된 건너뛰기' + (i + 1) + '번째 줄: 건너뛸 수가 제대로 되지 않았습니다.\n')
+                                            } else {
+                                                i = i + (buf[jump] + 1)
+                                            }
+                                        }
+                                    } else {
+                                        i = i + (jump + 1)
+                                    }
+                                }
+                            } else if(source[0] === '변수' || source[0] === 'ㅅ') {
+                                let int = source[1]
+                                let intval = source.slice(2).join(' ')
+                                if (!int || !intval) {
+                                    document.write('[한글스크립트 오류] 잘못된 변수선언: ' + (i + 1) + '번째 줄: 변수 선언이 제대로 되지 않았습니다.')
+                                } else {
+                                if (int.includes('!') || int.includes('@') || int.includes('#') || int.includes('$') || int.includes('%') || int.includes('^') || int.includes('&') || int.includes('(') || int.includes(')') || int.includes('+') || int.includes('-') || int.includes('=') || int.includes('|') || int.includes('\\') || int.includes('/') || int.includes('?') || int.includes('<') || int.includes('>') || int.includes('`') || int.includes('~') || int.includes('[') || int.includes(']') || int.includes('{') || int.includes('}') || int.includes(';') || int.includes(':')) {
+                                    document.write('[한글스크립트 오류] 잘못된 변수명: ' + (i + 1) + '번째 줄: 변수 이름에 포함될 수 있는 문자가 들어갔습니다: !@#$%^&()-+=|\\`~[]{}<>/;:')
+                                } else {
+                                    buf[int] = intval
+                                }
+                                i++
+                                }
+                            } else {
+                                document.write('[한글스크립트 오류] 잘못된 명령어: ' + (i + 1) + '번째 줄: ' + source[0] + '(이)가 정의되지 않음.\n')
+                                i++
+                            }
+                        }
+                    }
+                }
+            }
+        </script>
+    </div>
+</body>
+</html>
